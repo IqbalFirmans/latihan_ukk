@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 use Usamamuneerchaudhary\Commentify\Traits\Commentable;
 
 class Post extends Model
 {
-    use Commentable;
+    use Commentable, Searchable;
     
     protected $guarded = [];
 
@@ -24,6 +25,13 @@ class Post extends Model
             $model->id = Str::uuid();
         });
     }
+
+    public function toSearchableArray(): array
+    {
+      return [
+        'title' => $this->title,
+      ];
+  }
 
     public function user()
     {

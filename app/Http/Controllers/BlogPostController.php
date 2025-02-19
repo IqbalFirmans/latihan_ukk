@@ -7,9 +7,13 @@ use Illuminate\Http\Request;
 
 class BlogPostController extends Controller
 {
-    public function blogPost()
+    public function blogPost(Request $request)
     {
-        $posts = Post::all();
+        if ($request->keyword) {
+            $posts = Post::search($request->keyword)->get();
+        } else {
+            $posts = Post::all();
+        }
 
         return view('posts', compact('posts'));
     }
