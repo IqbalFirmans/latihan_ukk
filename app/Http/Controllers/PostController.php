@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
+use App\Models\Album;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,15 +15,13 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(string $user)
     {
-        if ($request->keyword) {
-            $posts = Post::search($request->keyword)->get();
-        } else {
-            $posts = Post::all();
-        }
+        $user = User::where('name', $user)->first();
+        $posts = Post::where('user_id', $user->id)->get();
+        $albums = Album::where('user_id', $user->id)->with('posts')->get();
 
-        return view('post.index', compact('posts'));
+        return view('post.index', compact('posts', 'user', 'albums'));
     }
 
     /**
@@ -57,8 +57,10 @@ class PostController extends Controller
     public function show(Post $post)
     {
         $posts = Post::all();
-
-        return view('post.show', compact('post', 'posts'));
+        
+        $albums = Album::where('user_id', Auth::user()->id)->get();
+        
+        return view('post.show', compact('post', 'posts', 'albums'));
     }
     
     /**
@@ -77,9 +79,15 @@ class PostController extends Controller
             }
             $post->update($validateData);
 
+            if ($request->has('albums')) {
+                $post->albums()->sync($request->input('albums'));
+            } else {
+                $post->albums()->detach();
+            }
+
             return back()->with('success', 'Update Post Success!');
         } catch (\Throwable $th) {
-            return back()->with('error', 'Update Post failed!');
+            return back()->with('error', 'Update Post failed!' . $th->getMessage());
         }
     }
 

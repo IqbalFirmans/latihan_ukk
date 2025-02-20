@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Album;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BlogPostController extends Controller
 {
@@ -15,6 +17,8 @@ class BlogPostController extends Controller
             $posts = Post::all();
         }
 
-        return view('posts', compact('posts'));
+        $albums = Album::where('user_id', Auth::user()->id)->get();
+
+        return view('posts', compact('posts', 'albums'));
     }
 }

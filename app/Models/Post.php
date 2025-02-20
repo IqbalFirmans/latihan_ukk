@@ -40,6 +40,6 @@ class Post extends Model
 
     public function albums()
     {
-        return $this->belongsToMany(Album::class, 'album_post', 'post_id', 'album_id');
+        return $this->belongsToMany(Album::class, 'album_post');
     }
 }

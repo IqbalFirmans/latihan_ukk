@@ -40,6 +40,20 @@
                 <p class="text-red">{{ $message }}</p>
             @enderror
         </div>
+        <div class="mb-6">
+            <label for="album" class="block mb-2 text-sm font-medium text-gray-900">Choose Albums</label>
+            <select
+                class="js-example-basic-multiple bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                name="albums[]" multiple="multiple">
+                @forelse ($albums as $album)
+                    <option value="{{ $album->id }}"
+                        {{ in_array($album->id, $post->albums->pluck('id')->toArray()) ? 'selected' : '' }}>
+                        {{ $album->name }}</option>
+                @empty
+                    <p>No albums</p>
+                @endforelse
+            </select>
+        </div>
         <button type="submit"
             class="text-white justify-center flex items-center bg-red-700 hover:bg-red-800 w-full focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">Update</button>
     </form>

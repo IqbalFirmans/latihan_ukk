@@ -61,8 +61,10 @@
             <!-- Settings Dropdown -->
             @auth
                 <div class="hidden sm:flex sm:items-center sm:ms-6">
-                    <img class="w-8 h-8 p-1 mr-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
+                    <a href="{{ route('post.index', auth()->user()->name) }}">
+                        <img class="w-8 h-8 p-1 mr-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
                         src="{{ asset('me.jpg') }}" alt="Bordered avatar">
+                    </a>
 
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
